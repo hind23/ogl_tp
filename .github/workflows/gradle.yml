@@ -7,58 +7,97 @@ on:
     branches: [main]
 
 jobs:
-  setup:
+  Test:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
-
-  test:
-    runs-on: windows-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@v3
-      - name: Verify Java Version
-        run: java -version
       - name: Run Tests
-        run: |
-          ./gradlew test --no-daemon --refresh-dependencies --stacktrace
+        run: ./gradlew test
+      - name: Generate Reports
+        run: ./gradlew generateCucumberReports
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: build/reports/**/*
 
-  reports:
+  Code-Analysis:
+    needs: Test
     runs-on: windows-latest
-    needs: test
     steps:
       - uses: actions/checkout@v3
-      - name: Generate Cucumber Reports
-        run: ./gradlew generateCucumberReports --no-daemon --refresh-dependencies
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Run Static Analysis
+        run: ./gradlew sonar
 
-  sonarqube-analysis:
+  Code-Quality:
+    needs: Code-Analysis
     runs-on: windows-latest
-    needs: reports
     steps:
       - uses: actions/checkout@v3
-      - name: SonarQube Analysis
-        run: |
-          ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }} --no-daemon --refresh-dependencies
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Check Quality Gates
+        run: ./gradlew sonarqube
 
-  build-and-document:
+  Build:
+    needs: Code-Quality
     runs-on: windows-latest
-    needs: sonarqube-analysis
     steps:
       - uses: actions/checkout@v3
-      - name: Build & Document
-        run: |
-          ./gradlew build --no-daemon --refresh-dependencies
-          ./gradlew javadoc --no-daemon --refresh-dependencies
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Build Project
+        run: ./gradlew build
+      - name: Generate Documentation
+        run: ./gradlew javadoc
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            build/libs/*.jar
+            build/docs/javadoc/**/*
 
-  deploy:
+  Deploy:
+    needs: Build
     runs-on: windows-latest
-    needs: build-and-document
     steps:
       - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - name: Deploy
-        run: ./gradlew publish --no-daemon --refresh-dependencies
+        run: ./gradlew publish
+
+  Notification:
+    needs: Deploy
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Send Notifications
+        run: |
+          ./gradlew postPublishedPluginToSlack
+          ./gradlew sendMail
