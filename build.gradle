@@ -18,7 +18,7 @@ repositories {
 dependencies {
   testImplementation 'io.cucumber:cucumber-java:6.0.0'
   testImplementation 'io.cucumber:cucumber-junit:6.0.0'
-  testImplementation 'junit:junit:4.13.2'  // Updated to latest version
+  testImplementation 'junit:junit:4.13.2'
 }
 
 cucumberReports {
@@ -44,17 +44,5 @@ javadoc {
   options.addStringOption('Xdoclint:none', '-quiet')
 }
 
-tasks.sonar {
-  dependsOn test
-}
 
-sonar {
-  properties {
-    property "sonar.projectKey", "hind23_ogl_tp"
-    property "sonar.organization", "ogltp7"
-    property "sonar.host.url", "https://sonarcloud.io"
-    property "sonar.token", System.getenv("SONAR_TOKEN")
-    property "sonar.java.binaries", "$buildDir/classes/java/main"
-    property "sonar.branch.name", "main"
-  }
-}
+
