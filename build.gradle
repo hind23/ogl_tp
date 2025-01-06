@@ -51,8 +51,8 @@ tasks.javadoc {
 
 sonar {
   properties {
-    property "sonar.projectKey", "com.example:tpogl5"
-    property "sonar.projectName", "tpogl5"
+    property "sonar.projectKey", "com.example:h_code"
+    property "sonar.projectName", "h_code"
     property "sonar.skipCompile", "true"
     property 'sonar.qualitygate.wait', true
     property "sonar.host.url", "http://197.140.142.82:9000"
@@ -63,6 +63,5 @@ sonar {
     property "sonar.junit.reportPaths", "build/test-results/test"
     property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
     property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-
   }
 }
