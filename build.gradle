@@ -26,6 +26,26 @@ dependencies {
   testImplementation 'junit:junit:4.13.2'
 }
 
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      groupId = 'java-api'
+      artifactId = 'library'
+      version = '1.0.0'
+    }
+  }
+  repositories {
+    maven {
+      url = uri("https://mymavenrepo.com/repo/bgUdPlEkBqW6qKvzoqdo/")
+      credentials {
+        username = 'myMavenRepo'
+        password = '15091979'
+      }
+    }
+  }
+}
+
 cucumberReports {
   outputDir = file('reports/cucumber')
   buildId = '0'
