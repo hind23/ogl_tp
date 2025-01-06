@@ -80,6 +80,6 @@ jobs:
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: fceb682c0cda22a1332418732d6a7b6cfc4e335d
+          SONAR_HOST_URL: http://localhost:9000
         run: ./gradlew build sonarqube --info
