@@ -50,3 +50,11 @@ tasks.javadoc {
 }
 
 
+sonarqube {
+  properties {
+    property "sonar.gradle.skipCompile", "true"
+    property "sonar.projectKey", "hind23_ogl_tp"
+    property "sonar.organization", "ogltp7"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
