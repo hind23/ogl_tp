@@ -37,17 +37,3 @@ jobs:
 
       - name: Deploy
         run: ./gradlew publish
-
-      - name: Notifications
-        run: |
-          ./gradlew postPublishedPluginToSlack
-          ./gradlew sendMail
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifacts
-          path: |
-            build/libs/*.jar
-            build/reports/**/*
-            build/docs/javadoc/**/*
