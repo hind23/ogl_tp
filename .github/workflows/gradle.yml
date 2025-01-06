@@ -11,32 +11,31 @@ jobs:
   Test:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout code
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # Step 2: Set up JDK 17
       - name: Set up JDK 17
-        uses: actions/setup-java@v4  # Updated to v4
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Grant execute permission for gradlew
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Make gradlew executable
+        run: |
+          git update-index --chmod=+x gradlew
+          chmod +x ./gradlew
+          ls -l gradlew
 
-      # Step 4: Run tests using Gradle
       - name: Run tests with Gradle
-        run: ./gradlew test
+        run: ./gradlew test --info
 
-      # Step 5: Archive test results
       - name: Archive test results
         uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: build/test-results/test
 
-      # Step 6: Archive Cucumber reports
       - name: Archive Cucumber reports
         uses: actions/upload-artifact@v3
         with:
@@ -45,41 +44,42 @@ jobs:
 
   Code-Analysis:
     runs-on: ubuntu-latest
-    needs: Test  # Ensure this job runs only after the Test job is complete
+    needs: Test
     steps:
-      # Step 1: Checkout code
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Disable shallow clone for better relevancy of analysis
+          fetch-depth: 0
 
-      # Step 2: Set up JDK 17
       - name: Set up JDK 17
-        uses: actions/setup-java@v4  # Fixed version mismatch (was v1 before)
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Cache SonarQube packages
       - name: Cache SonarQube packages
-        uses: actions/cache@v3  # Updated to v3
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # Step 4: Cache Gradle dependencies
       - name: Cache Gradle dependencies
-        uses: actions/cache@v3  # Updated to v3
+        uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Step 5: Build and analyze code with SonarQube
+      - name: Make gradlew executable
+        run: |
+          git update-index --chmod=+x gradlew
+          chmod +x ./gradlew
+          ls -l gradlew
+
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for SonarQube to get PR details
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Add SonarQube token in GitHub Secrets
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # Add SonarQube host URL in GitHub Secrets
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: ./gradlew build sonarqube --info
