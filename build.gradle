@@ -4,7 +4,7 @@ plugins {
   id 'jacoco'
   id 'de.zebrajaeger.sendMail' version '0.2.2'
   id 'maven-publish'
-  id "org.sonarqube" version "6.0.1.5171"
+  id "org.sonarqube" version "4.4.1.3373"
   id 'com.benrhine.slack-alerts-groovy' version '0.0.1'
 }
 
@@ -49,12 +49,20 @@ tasks.javadoc {
   options.addStringOption('Xdoclint:none', '-quiet')
 }
 
-println "SONAR_TOKEN: ${System.getenv("SONAR")}";
-
 sonar {
   properties {
-    property "sonar.projectKey", "hind23_ogl_tp"
-    property "sonar.organization", "ogltp7"
-    property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.projectKey", "com.example:tpogl5"
+    property "sonar.projectName", "tpogl5"
+    property "sonar.skipCompile", "true"
+    property 'sonar.qualitygate.wait', true
+    property "sonar.host.url", "http://197.140.142.82:9000"
+    property "sonar.projectVersion", "1.0"
+    property "sonar.sources", "src/main/java"
+    property "sonar.tests", "src/test/java"
+    property "sonar.sourceEncoding", "UTF-8"
+    property "sonar.junit.reportPaths", "build/test-results/test"
+    property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
+    property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+
   }
 }
