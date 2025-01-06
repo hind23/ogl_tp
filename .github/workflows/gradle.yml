@@ -7,9 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  setup:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
@@ -18,20 +17,46 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+  test:
+    runs-on: windows-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v3
       - name: Run Tests
         run: |
           ./gradlew test
 
+  reports:
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
       - name: Generate Reports
         run: ./gradlew generateCucumberReports
 
+  sonarqube-analysis:
+    runs-on: windows-latest
+    needs: reports
+    steps:
+      - uses: actions/checkout@v3
       - name: SonarQube Analysis
         run: |
-          ./gradlew sonar 
+          ./gradlew sonar
 
+  build-and-document:
+    runs-on: windows-latest
+    needs: sonarqube-analysis
+    steps:
+      - uses: actions/checkout@v3
       - name: Build & Document
         run: |
           ./gradlew build
           ./gradlew javadoc
+
+  deploy:
+    runs-on: windows-latest
+    needs: build-and-document
+    steps:
+      - uses: actions/checkout@v3
       - name: Deploy
         run: ./gradlew publish

@@ -22,16 +22,16 @@ dependencies {
 }
 
 cucumberReports {
-  outputDir = file('build/reports/cucumber')
+  outputDir = file('reports/cucumber')
   buildId = '0'
   reports = files('reports/example-report.json')
 }
 
 tasks.withType(Test) {
-  useJUnit() // Explicitly set JUnit for tests
+  useJUnit()
   reports {
-    junitXml.required.set(true) // Ensure XML reports are generated
-    html.required.set(true) // Ensure HTML reports are generated
+    junitXml.required.set(true)
+    html.required.set(true)
   }
   finalizedBy jacocoTestReport
 }
@@ -48,6 +48,7 @@ tasks.javadoc {
   options.encoding = 'UTF-8'
   options.addStringOption('Xdoclint:none', '-quiet')
 }
+
 
 sonar {
   properties {
