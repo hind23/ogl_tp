@@ -50,9 +50,3 @@ tasks.javadoc {
 }
 
 
-sonarqube {
-  properties {
-    property "sonar.host.url", "http://localhost:9000"
-    property "sonar.login", "fceb682c0cda22a1332418732d6a7b6cfc4e335d"
-  }
-}
