@@ -110,3 +110,5 @@ jobs:
       - name: Send Notifications
         run: |
           ./gradlew notifySlack
+          ./gradlew sendMail
+          

@@ -22,7 +22,7 @@ repositories {
 
 task notifySlack {
   doLast {
-    def webhookUrl = 'https://hooks.slack.com/services/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'
+    def webhookUrl = 'https://hooks.slack.com/services/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'
     def message = '{"text": "Projet publié! "}'
     def url = new URL(webhookUrl)
     def connection = url.openConnection() as HttpURLConnection
