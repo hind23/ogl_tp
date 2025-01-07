@@ -82,8 +82,7 @@ tasks.withType(Test) {
 jacocoTestReport {
   dependsOn test
   reports {
-    xml.required.set(true) // Required for SonarQube
-    html.required.set(true) // Optional: Generates an HTML report
+    xml.required.set(true)
   }
 }
 sendMail {
