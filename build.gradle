@@ -20,6 +20,25 @@ repositories {
   mavenCentral()
 }
 
+task postPublishedPluginToSlack {
+  doLast {
+    def webhookUrl = 'https://hooks.slack.com/services/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'
+    def message = '{"text": "Projet publié! "}'
+    def url = new URL(webhookUrl)
+    def connection = url.openConnection() as HttpURLConnection
+    connection.requestMethod = 'POST'
+    connection.setRequestProperty('Content-Type', 'application/json')
+    connection.doOutput = true
+    connection.outputStream.withWriter { writer ->
+      writer.write(message)
+    }
+    def responseCode = connection.responseCode
+    println "Response Code: ${responseCode}"
+
+    connection.disconnect()
+  }
+}
+
 dependencies {
   testImplementation 'io.cucumber:cucumber-java:6.0.0'
   testImplementation 'io.cucumber:cucumber-junit:6.0.0'
@@ -60,7 +79,7 @@ tasks.withType(Test) {
   }
   finalizedBy jacocoTestReport
 }
-
+$
 jacocoTestReport {
   dependsOn test
   reports {
