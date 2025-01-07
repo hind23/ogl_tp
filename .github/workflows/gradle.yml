@@ -8,7 +8,7 @@ on:
 
 jobs:
   Test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
@@ -28,7 +28,7 @@ jobs:
 
   Code-Analysis:
     needs: Test
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
@@ -41,7 +41,7 @@ jobs:
 
   Code-Quality:
     needs: Code-Analysis
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
@@ -54,7 +54,7 @@ jobs:
 
   Build:
     needs: Code-Quality
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
@@ -99,7 +99,7 @@ jobs:
 
   Notification:
     needs: Deploy
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
@@ -111,3 +111,4 @@ jobs:
         run: |
           ./gradlew notifySlack
           ./gradlew sendMail
+          
