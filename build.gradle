@@ -29,9 +29,7 @@ task notifySlack {
     connection.requestMethod = 'POST'
     connection.setRequestProperty('Content-Type', 'application/json')
     connection.doOutput = true
-    connection.outputStream.withWriter { writer ->
-      writer.write(message)
-    }
+    connection.outputStream.withWriter { writer -> writer.write(message)}
     def responseCode = connection.responseCode
     println "Response Code: ${responseCode}"
 
