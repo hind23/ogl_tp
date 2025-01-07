@@ -74,9 +74,10 @@ jobs:
             build/libs/*.jar
             build/docs/javadoc/**/*
 
+
   Deploy:
-    needs: Build
     runs-on: ubuntu-latest
+    needs: Build
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
