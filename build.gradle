@@ -20,7 +20,7 @@ repositories {
   mavenCentral()
 }
 
-task postPublishedPluginToSlack {
+task notifySlack {
   doLast {
     def webhookUrl = 'https://hooks.slack.com/services/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'
     def message = '{"text": "Projet publié! "}'
@@ -86,7 +86,20 @@ jacocoTestReport {
     html.required.set(true) // Optional: Generates an HTML report
   }
 }
+sendMail {
+  smtpServer {
+    host "smtp.gmail.com"
+    port 587
+    user "lh_dehili@esi.dz"
+    password "nwvr cmov dpsj jzmf"
+  }
+  mail {
+    from "lh_dehili@esi.dz"
+    to "lh_dehili@esi.dz"
 
+    body "Successful !"
+  }
+}
 tasks.javadoc {
   options.encoding = 'UTF-8'
   options.addStringOption('Xdoclint:none', '-quiet')
