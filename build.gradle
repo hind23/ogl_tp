@@ -79,7 +79,6 @@ tasks.withType(Test) {
   }
   finalizedBy jacocoTestReport
 }
-$
 jacocoTestReport {
   dependsOn test
   reports {
