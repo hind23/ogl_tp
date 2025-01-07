@@ -109,5 +109,4 @@ jobs:
           java-version: '11'
       - name: Send Notifications
         run: |
-          ./gradlew postPublishedPluginToSlack
-          ./gradlew sendMail
+          ./gradlew notifySlack
