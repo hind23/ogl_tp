@@ -5,17 +5,13 @@ plugins {
   id 'de.zebrajaeger.sendMail' version '0.2.2'
   id 'maven-publish'
   id "org.sonarqube" version "4.4.1.3373"
-  id 'com.github.gprivin.gradle-slack-plugin' version '1.2.1'
-  id 'org.simplejavamail.gradle.email' version '6.7.0'
-
+  id 'com.benrhine.slack-alerts-groovy' version '0.0.1'
 }
 java {
   sourceCompatibility = JavaVersion.VERSION_11
   targetCompatibility = JavaVersion.VERSION_11
 }
-slack {
-  webhookUrl = 'https://hooks.slack.com/services/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'
-}
+
 
 group = 'org.example'
 version = '1.0'
@@ -24,9 +20,22 @@ repositories {
   mavenCentral()
 }
 
-task notifySlack {
+task postPublishedPluginToSlack {
   doLast {
-    slack.send('Build completed successfully!')
+    def webhookUrl = 'https://hooks.slack.com/services/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'
+    def message = '{"text": "Projet publié! "}'
+    def url = new URL(webhookUrl)
+    def connection = url.openConnection() as HttpURLConnection
+    connection.requestMethod = 'POST'
+    connection.setRequestProperty('Content-Type', 'application/json')
+    connection.doOutput = true
+    connection.outputStream.withWriter { writer ->
+      writer.write(message)
+    }
+    def responseCode = connection.responseCode
+    println "Response Code: ${responseCode}"
+
+    connection.disconnect()
   }
 }
 
