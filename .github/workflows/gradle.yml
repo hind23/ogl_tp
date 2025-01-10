@@ -28,6 +28,7 @@ jobs:
       - name: Run Static Analysis
         run: ./gradlew sonar
       - name: Check Quality Gates
+        shell: bash
         run: |
           # Install jq for JSON parsing
           choco install jq -y
