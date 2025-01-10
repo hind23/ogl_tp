@@ -29,17 +29,29 @@ jobs:
         run: ./gradlew sonar
       - name: Check Quality Gates
         run: |
-          response=$(curl -s -u "e9c15467e0201e7fbd983301a7ee675dd1940964" \
-              "http://197.140.142.82:9000/api/qualitygates/project_status?projectKey=project_key")
-                  echo "Response: $response"
-                  status=$(echo "$response" | jq -r '.projectStatus.status')
-                  if ($status -eq "ERROR") {
-                    echo "Quality Gate failed!"
-                    exit 1
-                  } else {
-                    echo "Quality Gate passed!"
-                  }
-            shell: pwsh
+          # Install jq for JSON parsing
+          choco install jq -y
+
+          # Fetch the Quality Gate status from SonarQube
+          response=$(curl -s -u ${{ secrets.SONARQUBE_TOKEN }}: \
+              "http://197.140.142.82:9000/api/qualitygates/project_status?projectKey=com")
+
+          # Check if the curl command succeeded
+          if [ $? -ne 0 ]; then
+            echo "Failed to fetch Quality Gate status!"
+            exit 1
+          fi
+
+          # Parse the JSON response to get the status
+          status=$(echo "$response" | jq -r '.projectStatus.status')
+
+          # Check the Quality Gate status
+          if [ "$status" = "ERROR" ]; then
+            echo "Quality Gate failed!"
+            exit 1
+          else
+            echo "Quality Gate passed!"
+          fi
       - name: Build Project
         run: ./gradlew build
       - name: Generate Documentation
