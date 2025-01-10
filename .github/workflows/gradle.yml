@@ -70,6 +70,19 @@ jobs:
         env:
           MYMAVENREPO_USERNAME: ${{ secrets.MYMAVENREPO_USERNAME }}
           MYMAVENREPO_PASSWORD: ${{ secrets.REPO_PASS }}
+
+      - name: Send Email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: "lh_dehili@esi.dz"
+          password: "nwvr cmov dpsj jzmf"
+          subject: "Build Status"
+          body: "Build completed successfully!"
+          to: "lh_dehili@esi.dz"
+          from: "slh_dehili@esi.dz"
+
       - name: Send Notifications
         run: |
           ./gradlew slackAlerts
