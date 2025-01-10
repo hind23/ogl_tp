@@ -72,5 +72,5 @@ jobs:
           MYMAVENREPO_PASSWORD: ${{ secrets.REPO_PASS }}
       - name: Send Notifications
         run: |
-          ./gradlew notifySlack
-          ./gradlew sendMail
+          ./gradlew slackAlerts
+          ./gradlew mail

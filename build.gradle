@@ -2,16 +2,16 @@ plugins {
   id 'java'
   id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
   id 'jacoco'
-  id 'de.zebrajaeger.sendMail' version '0.2.2'
   id 'maven-publish'
   id "org.sonarqube" version "4.4.1.3373"
   id 'com.benrhine.slack-alerts-groovy' version '0.0.1'
+  id 'org.gradle.api.plugins.mail' version '1.0.0' // Add this line for email plugin
 }
+
 java {
   sourceCompatibility = JavaVersion.VERSION_11
   targetCompatibility = JavaVersion.VERSION_11
 }
-
 
 group = 'org.example'
 version = '1.0'
@@ -20,20 +20,22 @@ repositories {
   mavenCentral()
 }
 
-task notifySlack {
-  doLast {
-    def webhookUrl = 'https://hooks.slack.com/services/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'
-    def message = '{"text": "Projet publié! "}'
-    def url = new URL(webhookUrl)
-    def connection = url.openConnection() as HttpURLConnection
-    connection.requestMethod = 'POST'
-    connection.setRequestProperty('Content-Type', 'application/json')
-    connection.doOutput = true
-    connection.outputStream.withWriter { writer -> writer.write(message)}
-    def responseCode = connection.responseCode
-    println "Response Code: ${responseCode}"
+slackAlerts {
+  webhookUrl = 'https://hooks.slack.com/services/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'
+  message = '{"text": "Projet publié!"}'
+}
 
-    connection.disconnect()
+mail {
+  from = 'lh_dehili@esi.dz'
+  to = 'lh_dehili@esi.dz'
+  subject = 'Build Status'
+  body = 'Successful!'
+  smtp {
+    host = 'smtp.gmail.com'
+    port = 587
+    auth = true
+    user = 'lh_dehili@esi.dz'
+    password = 'nwvr cmov dpsj jzmf'
   }
 }
 
@@ -77,31 +79,18 @@ tasks.withType(Test) {
   }
   finalizedBy jacocoTestReport
 }
+
 jacocoTestReport {
   dependsOn test
   reports {
     xml.required.set(true)
   }
 }
-sendMail {
-  smtpServer {
-    host "smtp.gmail.com"
-    port 587
-    user "lh_dehili@esi.dz"
-    password "nwvr cmov dpsj jzmf"
-  }
-  mail {
-    from "lh_dehili@esi.dz"
-    to "lh_dehili@esi.dz"
 
-    body "Successful !"
-  }
-}
 tasks.javadoc {
   options.encoding = 'UTF-8'
   options.addStringOption('Xdoclint:none', '-quiet')
 }
-
 
 sonar {
   properties {
