@@ -35,7 +35,7 @@ jobs:
 
           # Fetch the Quality Gate status from SonarQube
           response=$(curl -s -u ${{ secrets.SONARQUBE_TOKEN }}: \
-              "http://197.140.142.82:9000/api/qualitygates/project_status?projectKey=com")
+              "http://197.140.142.82:9000/api/qualitygates/project_status?projectKey=com.example:h_code")
 
           # Check if the curl command succeeded
           if [ $? -ne 0 ]; then
