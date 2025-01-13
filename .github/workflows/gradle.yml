@@ -90,7 +90,7 @@ jobs:
           server_address: smtp.gmail.com
           server_port: 587
           username: "lh_dehili@esi.dz"
-          password: "lh_dehili@esi.dz"
+          password: "nwvr cmov dpsj jzmf"
           subject: "Build Status"
           body: "Build   completed successfully!"
           from: "lh_dehili@esi.dz"
