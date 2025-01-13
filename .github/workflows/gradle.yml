@@ -19,28 +19,7 @@ jobs:
           java-version: '11'
 
       # Send Slack notification for build start
-      - name: Notify Slack - Build Started
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          custom_payload: |
-            {
-              "text": "Build Started for ${{ github.repository }}",
-              "attachments": [{
-                "color": "#FFFF00",
-                "fields": [{
-                  "title": "Repository",
-                  "value": "${{ github.repository }}",
-                  "short": true
-                }, {
-                  "title": "Event",
-                  "value": "${{ github.event_name }}",
-                  "short": true
-                }]
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
 
       - name: Run Tests
         run: ./gradlew test
