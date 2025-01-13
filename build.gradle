@@ -68,20 +68,7 @@ jacocoTestReport {
     xml.required.set(true)
   }
 }
-sendMail {
-  smtpServer {
-    host "smtp.gmail.com"
-    port 587
-    user "lh_dehili@esi.dz"
-    password "nwvr cmov dpsj jzmf"
-  }
-  mail {
-    from "lh_dehili@esi.dz"
-    to "lh_dehili@esi.dz"
 
-    body "Successful !"
-  }
-}
 tasks.javadoc {
   options.encoding = 'UTF-8'
   options.addStringOption('Xdoclint:none', '-quiet')
