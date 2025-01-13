@@ -92,7 +92,7 @@ jobs:
           username: "lh_dehili@esi.dz"
           password: "lh_dehili@esi.dz"
           subject: "Build Status"
-          body: "Build completed successfully!"
+          body: "Build   completed successfully!"
           from: "lh_dehili@esi.dz"
           to: "lh_dehili@esi.dz"
 
