@@ -145,4 +145,4 @@ jobs:
             slack-message: |
               :rocket: Success! :rocket:
         env:
-            SLACK_BOT_TOKEN: "xoxp-8255267107573-8270796223473-8283845493541-6559a4e753c5fe01982c43840d8edfb6"
+            SLACK_BOT_TOKEN:${{ secrets.SLACK_BOT_TOKEN }}
