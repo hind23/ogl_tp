@@ -11,22 +11,52 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
+
+      # Send Slack notification for build start
+      - name: Notify Slack - Build Started
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "Build Started for ${{ github.repository }}",
+              "attachments": [{
+                "color": "#FFFF00",
+                "fields": [{
+                  "title": "Repository",
+                  "value": "${{ github.repository }}",
+                  "short": true
+                }, {
+                  "title": "Event",
+                  "value": "${{ github.event_name }}",
+                  "short": true
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Run Tests
         run: ./gradlew test
+
       - name: Generate Reports
         run: ./gradlew generateCucumberReports
+
       - name: Upload Test Reports
         uses: actions/upload-artifact@v3
         with:
           name: test-reports
           path: build/reports/**/*
+
       - name: Run Static Analysis
         run: ./gradlew sonar
+
       - name: Check Quality Gates
         shell: bash
         run: |
@@ -53,10 +83,34 @@ jobs:
           else
             echo "Quality Gate passed!"
           fi
+
+      # Notify Slack about Quality Gate status
+      - name: Notify Slack - Quality Gate Status
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "Quality Gate Status for ${{ github.repository }}",
+              "attachments": [{
+                "color": "${{ job.status == 'success' && '#36a64f' || '#ff0000' }}",
+                "fields": [{
+                  "title": "Status",
+                  "value": "${{ job.status }}",
+                  "short": true
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Build Project
         run: ./gradlew build
+
       - name: Generate Documentation
         run: ./gradlew javadoc
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -64,6 +118,7 @@ jobs:
           path: |
             build/libs/*.jar
             build/docs/javadoc/**/*
+
       - name: Deploy to Maven Repository
         run: |
           ./gradlew publish
@@ -82,3 +137,12 @@ jobs:
           body: "Build completed successfully!"
           to: "lh_dehili@esi.dz"
           from: "lh_dehili@esi.dz"
+
+      - name: Send Slack Notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+            channel-id: 'C0875JB5JBZ'
+            slack-message: |
+              :rocket: Success! :rocket:
+        env:
+            SLACK_BOT_TOKEN: "xoxp-8255267107573-8270796223473-8283845493541-6559a4e753c5fe01982c43840d8edfb6"
