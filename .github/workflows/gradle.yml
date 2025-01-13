@@ -85,25 +85,6 @@ jobs:
           fi
 
       # Notify Slack about Quality Gate status
-      - name: Notify Slack - Quality Gate Status
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          custom_payload: |
-            {
-              "text": "Quality Gate Status for ${{ github.repository }}",
-              "attachments": [{
-                "color": "${{ job.status == 'success' && '#36a64f' || '#ff0000' }}",
-                "fields": [{
-                  "title": "Status",
-                  "value": "${{ job.status }}",
-                  "short": true
-                }]
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Build Project
         run: ./gradlew build
