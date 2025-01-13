@@ -5,7 +5,6 @@ plugins {
   id 'de.zebrajaeger.sendMail' version '0.2.2'
   id 'maven-publish'
   id "org.sonarqube" version "4.4.1.3373"
-  id 'com.github.kageiit.gradle-slack-plugin' version '1.0.0'
 
 
 }
