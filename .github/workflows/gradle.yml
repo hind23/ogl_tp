@@ -84,8 +84,6 @@ jobs:
             echo "Quality Gate passed!"
           fi
 
-      # Notify Slack about Quality Gate status
-
       - name: Build Project
         run: ./gradlew build
 
@@ -112,18 +110,18 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port: 587
-          username: "lh_dehili@esi.dz"
-          password: "nwvr cmov dpsj jzmf"
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "Build Status"
           body: "Build completed successfully!"
-          to: "lh_dehili@esi.dz"
-          from: "lh_dehili@esi.dz"
+          to: ${{ secrets.EMAIL_USERNAME }}
+          from: ${{ secrets.EMAIL_USERNAME }}
 
       - name: Send Slack Notification
         uses: slackapi/slack-github-action@v1.24.0
         with:
-            channel-id: 'C0875JB5JBZ'
-            slack-message: |
-              :rocket: Success! :rocket:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          slack-message: |
+            :rocket: Success! :rocket:
         env:
-            SLACK_BOT_TOKEN:${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
