@@ -93,8 +93,8 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "Build Status"
           body: "Build completed successfully!"
-          from: ${{ secrets.EMAIL_USERNAME }}
-          to: ${{ secrets.EMAIL_USERNAME }}
+          from: "lh_dehili@esi.dz"
+          to: "lh_dehili@esi.dz"
 
       - name: Send Slack Notification
         uses: slackapi/slack-github-action@v1.24.0
