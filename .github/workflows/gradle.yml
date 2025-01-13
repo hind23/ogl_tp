@@ -81,9 +81,4 @@ jobs:
           subject: "Build Status"
           body: "Build completed successfully!"
           to: "lh_dehili@esi.dz"
-          from: "slh_dehili@esi.dz"
-
-      - name: Send Notifications
-        run: |
-          ./gradlew slackAlerts
-          ./gradlew mail
+          from: "lh_dehili@esi.dz"
