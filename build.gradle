@@ -19,10 +19,7 @@ version = '1.0'
 repositories {
   mavenCentral()
 }
-slack {
-  webhookUrl = ''
-  message = 'Build completed successfully!'
-}
+
 
 
 dependencies {
