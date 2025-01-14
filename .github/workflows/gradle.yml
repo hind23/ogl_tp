@@ -35,28 +35,19 @@ jobs:
       - name: Check Quality Gates
         shell: bash
         run: |
-          # Install jq for JSON parsing
           choco install jq -y
-
-          # Fetch the Quality Gate status from SonarQube
           response=$(curl -s -u ${{ secrets.SONARQUBE_TOKEN }}: \
               "http://197.140.142.82:9000/api/qualitygates/project_status?projectKey=com.example:h_code")
-
-          # Check if the curl command succeeded
           if [ $? -ne 0 ]; then
             echo "Failed to fetch Quality Gate status!"
             exit 1
           fi
-
-          # Parse the JSON response to get the status
           status=$(echo "$response" | jq -r '.projectStatus.status')
-
-          # Check the Quality Gate status
           if [ "$status" = "ERROR" ]; then
             echo "Quality Gate failed!"
             exit 1
           else
-            echo "Quality Gate passed!"
+            echo "Quality Gate test passed!"
           fi
 
       - name: Build Project
@@ -91,8 +82,6 @@ jobs:
           body: "Build   completed successfully!"
           from: "lh_dehili@esi.dz"
           to: "lh_dehili@esi.dz"
-
-      # Send Slack notification for build start
 
       - name: Send Slack Notification
         uses: slackapi/slack-github-action@v1.24.0
